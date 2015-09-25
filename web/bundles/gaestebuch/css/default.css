@@ -1,0 +1,97 @@
+@CHARSET "ISO-8859-1";
+
+a{
+	text-decoration:none;
+	color: #009;
+}
+
+a:HOVER{
+	text-decoration: underline;
+}
+a:VISITED{
+	color:#009;
+}
+
+#body_create{
+	text-align:center;
+}
+#tbl_create{
+	text-align:left;
+	padding:10px;
+	margin:auto;
+}
+.gbentry {
+	position:relative;
+	margin:20px;
+}
+.gbentry_topline {
+	width:100%;
+	position:absolute;
+	top:16px;
+}
+.gbentry_topline_name {
+	color:#700;
+	width:50%;
+	text-align:left;
+	position:absolute;
+	top:3px;
+	left:3px;
+}
+
+.gbentry_topline_time {
+	text-align:right;
+	width:50%;
+	position:absolute;
+	top:3px;
+	right:3px;
+	padding:auto;
+}
+.gbentry_content {
+	text-align:left;
+	padding:30px 20px 20px 20px;
+}
+.gbentry_delete {
+	position:absolute;
+	bottom:3px;
+	right:3px;
+	font-size:11px;
+}
+.entrytitle {
+	font-size: 12px;
+	font-weight:bold;
+} 
+
+.form_textarea{
+	width:500px;
+	height:100px;
+}
+
+
+#overlay {
+	position:absolute;
+	top:0;
+	left:0;
+	width:100%;
+	height:100%;
+	margin:auto;
+	text-align:center;
+	vertical-align:middle;
+}
+#overlay_inner {
+	position:relative;
+	top:30%;
+	width:60%;
+	padding:40px;
+	margin:auto;
+	display:block;
+}
+#styleswitch {
+	font-size:11px;
+	position:absolute;
+	top:0px;
+	right:0px;
+	background:#fff;
+	padding:1px;
+	border-bottom:1px solid #000;
+	border-left:1px solid #000;
+}
