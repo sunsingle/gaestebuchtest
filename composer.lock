@@ -4,7 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "7fcda12cddb5e463abd88f8573b5b90a",
+    "hash": "9b4ea1822b82483a6d14a4b0f15a4e02",
+    "content-hash": "721bc761f9c15afaa1286781afbfede1",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -769,6 +770,67 @@
             "time": "2015-08-31 12:59:39"
         },
         {
+            "name": "helios-ag/fm-bbcode-bundle",
+            "version": "6.8",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/helios-ag/FMBbCodeBundle.git",
+                "reference": "7208401df22c0ca3eb0de047a0f52fb1af2b3057"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/helios-ag/FMBbCodeBundle/zipball/7208401df22c0ca3eb0de047a0f52fb1af2b3057",
+                "reference": "7208401df22c0ca3eb0de047a0f52fb1af2b3057",
+                "shasum": ""
+            },
+            "require": {
+                "mjohnson/decoda": "6.*",
+                "php": ">=5.3.2",
+                "sensio/distribution-bundle": ">=2.1",
+                "symfony/assetic-bundle": "~2.0",
+                "symfony/config": "~2.0",
+                "symfony/console": "~2.0",
+                "symfony/dependency-injection": "~2.0",
+                "symfony/framework-bundle": "~2.1",
+                "symfony/http-foundation": "~2.1",
+                "symfony/http-kernel": "~2.0",
+                "symfony/process": "~2.0",
+                "symfony/templating": "~2.0",
+                "symfony/twig-bundle": "~2.0",
+                "symfony/yaml": "~2.0"
+            },
+            "require-dev": {
+                "symfony/symfony": "~2.1"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "6.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "FM\\BbcodeBundle\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Albert Ganiev",
+                    "email": "helios.ag@gmail.com"
+                }
+            ],
+            "description": "Symfony FMBbCodeBundle",
+            "homepage": "https://github.com/helios-ag/FMBbCodeBundle",
+            "keywords": [
+                "bbcode"
+            ],
+            "time": "2015-09-25 08:51:39"
+        },
+        {
             "name": "incenteev/composer-parameter-handler",
             "version": "v2.1.1",
             "source": {
@@ -946,6 +1008,56 @@
                 "minification"
             ],
             "time": "2015-08-31 19:07:16"
+        },
+        {
+            "name": "mjohnson/decoda",
+            "version": "6.7.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/milesj/decoda.git",
+                "reference": "14d9aba0b3e00b829193d3291975b69b41e3cd3f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/milesj/decoda/zipball/14d9aba0b3e00b829193d3291975b69b41e3cd3f",
+                "reference": "14d9aba0b3e00b829193d3291975b69b41e3cd3f",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.7"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Decoda": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Miles Johnson",
+                    "homepage": "http://milesj.me"
+                }
+            ],
+            "description": "A lightweight lexical string parser for BBCode styled markup.",
+            "homepage": "http://milesj.me/code/php/decoda",
+            "keywords": [
+                "HOOK",
+                "bbcode",
+                "decoda",
+                "filter",
+                "lexer",
+                "markup",
+                "parser"
+            ],
+            "time": "2015-06-14 19:11:51"
         },
         {
             "name": "monolog/monolog",
@@ -1278,12 +1390,12 @@
             "version": "v2.7.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/AsseticBundle.git",
+                "url": "https://github.com/symfony/assetic-bundle.git",
                 "reference": "3ae5c8ca3079b6e0033cc9fbfb6500e2bc964da5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/AsseticBundle/zipball/3ae5c8ca3079b6e0033cc9fbfb6500e2bc964da5",
+                "url": "https://api.github.com/repos/symfony/assetic-bundle/zipball/3ae5c8ca3079b6e0033cc9fbfb6500e2bc964da5",
                 "reference": "3ae5c8ca3079b6e0033cc9fbfb6500e2bc964da5",
                 "shasum": ""
             },
@@ -1348,12 +1460,12 @@
             "version": "v2.7.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/MonologBundle.git",
+                "url": "https://github.com/symfony/monolog-bundle.git",
                 "reference": "9320b6863404c70ebe111e9040dab96f251de7ac"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/MonologBundle/zipball/9320b6863404c70ebe111e9040dab96f251de7ac",
+                "url": "https://api.github.com/repos/symfony/monolog-bundle/zipball/9320b6863404c70ebe111e9040dab96f251de7ac",
                 "reference": "9320b6863404c70ebe111e9040dab96f251de7ac",
                 "shasum": ""
             },
@@ -1407,12 +1519,12 @@
             "version": "v2.3.8",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/SwiftmailerBundle.git",
+                "url": "https://github.com/symfony/swiftmailer-bundle.git",
                 "reference": "970b13d01871207e81d17b17ddda025e7e21e797"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/SwiftmailerBundle/zipball/970b13d01871207e81d17b17ddda025e7e21e797",
+                "url": "https://api.github.com/repos/symfony/swiftmailer-bundle/zipball/970b13d01871207e81d17b17ddda025e7e21e797",
                 "reference": "970b13d01871207e81d17b17ddda025e7e21e797",
                 "shasum": ""
             },
@@ -1580,6 +1692,52 @@
                 "framework"
             ],
             "time": "2015-09-08 14:26:39"
+        },
+        {
+            "name": "tinymce/tinymce",
+            "version": "4.2.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tinymce/tinymce-dist.git",
+                "reference": "9bdc89da4f72a5f11a3cc6bb1373e1a898876628"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tinymce/tinymce-dist/zipball/9bdc89da4f72a5f11a3cc6bb1373e1a898876628",
+                "reference": "9bdc89da4f72a5f11a3cc6bb1373e1a898876628",
+                "shasum": ""
+            },
+            "type": "component",
+            "extra": {
+                "component": {
+                    "scripts": [
+                        "tinymce.js",
+                        "plugins/*/plugin.js",
+                        "themes/*/theme.js"
+                    ],
+                    "files": [
+                        "tinymce.min.js",
+                        "plugins/*/plugin.min.js",
+                        "themes/*/theme.min.js",
+                        "skins/**"
+                    ]
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-2.1"
+            ],
+            "description": "Web based JavaScript HTML WYSIWYG editor control.",
+            "homepage": "http://www.tinymce.com",
+            "keywords": [
+                "editor",
+                "html",
+                "javascript",
+                "richtext",
+                "tinymce",
+                "wysiwyg"
+            ],
+            "time": "2015-08-31 07:48:30"
         },
         {
             "name": "twig/twig",

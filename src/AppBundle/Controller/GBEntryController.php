@@ -23,66 +23,34 @@ class GBEntryController extends Controller
      */
     public function viewAction($page)
     {
-    	$login = false;
+    	$sumPages = $login = false;
     	$session = $this->getRequest()->getSession();
     	
-    	$limit = 5;
-    	$em = $this->get("doctrine")->getManager();
+    	$mgr = $this->get('guestbook_manager');
     	
-    	$rep = $em->getRepository("AppBundle:GBEntry");
-    	$qb = $rep->createQueryBuilder('a');
-    	$qb->select('COUNT(a)');
-    	$qb->where($qb->expr()->not('a.ref=-2'));
-//     	$qb->where('a.ref=-1');
-    	$count = $qb->getQuery()->getSingleScalarResult();
+    	$response = $mgr->getGuestbook($page,$sumPages);
     	
-    	if ($count > $limit){
+    	$pageLinks = array();
     		
-    		$sumPages = ceil($count / $limit);
-    		
-    		if(!is_numeric($page)){
-    			if ($page == "lastpage")
-    				$page = $sumPages;
-    			else
-    				$page = 0;
-    		}
-    		if ($page > $sumPages)
-    			$page = $sumPages;
-    		elseif($page < 1)
-    			$page = 1;
-    		
-    		$response = $rep->findBy(array(),array('id'=>'ASC'),$limit,($page-1)*$limit);
-    		
-    		$pageLinks = array();
-    		
-    		for($i = 1; $i <= $sumPages; $i++){
+    	for($i = 1; $i <= $sumPages; $i++)
+    	{
     			$link = array();
     			$link["num"] = $i;
     			$link["active"] = $page!=$i;
     			
     			$pageLinks[] = $link;
-    		}
     	}
-    	else {
-    		$response = $rep->findAll();
-    	}
+
 
     	if ($session->get("nick",false))
     		$login = true;
     	
     	$entries = array();
     	foreach ($response AS $gbentry){
-    		$preTxt = "";
-    		if ($gbentry->getRef() != -1){
-    			$preTxt = "[b][color=#700]*** vom Admin bearbeitet ***[/color][/b][br]";
-    		}
-    		$text = $this->bbcode_format($preTxt.$gbentry->getEntry());
-    		$gbentry->setEntry($text);
+    		$preTxt = ($gbentry->getRef() != -1) ? "[b][color=#700]*** vom Admin bearbeitet ***[/color][/b][br]" : "";
+    		$gbentry->setEntry($preTxt.$gbentry->getEntry());
     		$entries[] = $gbentry;
     	}
-    	
-    	
-    	
 		$lay = self::getLayoutDefinition($session);
     	
     	return $this->render("gaestebuch/view.html.twig", array(
@@ -113,7 +81,7 @@ class GBEntryController extends Controller
     		$entry = new GBEntry();
     		$entry->setDate(new \DateTime("now"));
     		$entry->setEmail($data['email']);
-    		$entry->setEntry(mysql_real_escape_string($data['entry']));
+    		$entry->setEntry(($data['entry']));
     		$entry->setName($data['name']);
     		
     		$em = $this->getDoctrine()->getManager();
@@ -199,7 +167,7 @@ class GBEntryController extends Controller
 //     			$entry->setEmail($data['email']);
 //     			$entry->setEntry();
 //     			$entry->setName($data['name']);
-//     			$entry->setRef($id);
+//     			$entry->setRef(-2);
     		
 //     			$em = $this->getDoctrine()->getManager();
 //     			$entry = $em->getRepository('AppBundle:GBEntry')->find($id);
@@ -232,58 +200,6 @@ class GBEntryController extends Controller
     	}
     	return $this->redirect($this->generateUrl("_login"));
     }
-    
-    private function bbcode_format($str) 
-    {
-    	$str = htmlentities($str);
-    	
-    	$simple_search = array(
-    	'/\[b\](.*?)\[\/b\]/is',
-    	'/\[i\](.*?)\[\/i\]/is',
-    	'/\[u\](.*?)\[\/u\]/is',
-    	'/\[url\=(.*?)\](.*?)\[\/url\]/is',
-    	'/\[url\](.*?)\[\/url\]/is',
-    	'/\[align\=(left|center|right)\](.*?)\[\/align\]/is',
-    	'/\[img\](.*?)\[\/img\]/is',
-    	'/\[mail\=(.*?)\](.*?)\[\/mail\]/is',
-    	'/\[mail\](.*?)\[\/mail\]/is',
-    	'/\[font\=(.*?)\](.*?)\[\/font\]/is',
-    	'/\[size\=(.*?)\](.*?)\[\/size\]/is',
-    	'/\[color\=(.*?)\](.*?)\[\/color\]/is',
-    	'/\[thumb\=(.*?)\](.*?)\[\/thumb\]/is',
-    	'/\[strike\](.*?)\[\/strike\]/is',
-    	'/\[br\]/is',
-    	'/\[imglink\=(.*?)\](.*?)\[\/imglink\]/is',
-    	'/\[youtube\](.*?)\[\/youtube\]/is',
-    	'/\\\\r\\\\n/is',
-    	);
-    	
-    	$simple_replace = array(
-    	'<strong>$1</strong>',
-    	'<em>$1</em>',
-    	'<u>$1</u>',
-    	'<a href="$1" target="_blank">$2</a>',
-    	'<a href="$1" target="_blank">$1</a>',
-    	'<div style="text-align: $1;">$2</div>',
-    	'<img src="$1" alt="Picture" border="0"/>',
-    	'<a href="mailto:$1">$2</a>',
-    	'<a href="mailto:$1">$1</a>',
-    	'<span style="font-family: $1;">$2</span>',
-    	'<span style="font-size: $1;">$2</span>',
-    	'<span style="color: $1;">$2</span>',
-    	'<img width="$1" src="$2" alt="Picture" border="0"/>',
-    	'<span style="text-decoration: line-through;">$1</span>',
-    	'<br />',
-    	'<a href="$1"><img src="$2" alt="Picture" border="0" /></a>',
-    	'<object width="425" height="350"><param name="movie" value="http://www.youtube.com/v/$1"></param><param name="wmode" value="transparent"></param><embed src="http://www.youtube.com/v/$1" type="application/x-shockwave-flash" wmode="transparent" width="425" height="350"></embed></object>',
-    	'<br />',
-    	);
-    	
-    	// Do simple BBCode's
-    	$str = preg_replace ($simple_search, $simple_replace, $str);
-    	return nl2br(($str));
-    }
-    	
     		 
     public static function getLayoutDefinition(Session $session)
     {

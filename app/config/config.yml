@@ -2,6 +2,7 @@ imports:
     - { resource: parameters.yml }
     - { resource: security.yml }
     - { resource: services.yml }
+    - { resource: "@AppBundle/Resources/config/services.yml" }
 
 # Put parameters here that don't need to change on each machine where the app is deployed
 # http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
@@ -78,3 +79,12 @@ swiftmailer:
     username:  "%mailer_user%"
     password:  "%mailer_password%"
     spool:     { type: memory }
+  
+# Filter
+fm_bbcode:
+   filter_sets:
+      my_default_filter:
+         strict: false # if you want to parse attr values without quotes
+         locale: de
+         xhtml: true
+         filters: [ default, block, code, email, image, list, quote, text, url, video ]

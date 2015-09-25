@@ -1,0 +1,7 @@
+parameters:
+  guestbook.entries_per_page:  5
+
+services:
+   guestbook_manager:
+      class:     AppBundle\Service\GuestbookManager
+      arguments: [ "%guestbook.entries_per_page%",'@doctrine.orm.entity_manager']
