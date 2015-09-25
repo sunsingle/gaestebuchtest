@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>{% block title %}Welcome!{% endblock %}</title>
+		{% block stylesheets %}{% endblock %}
+		<link rel="stylesheet" href="{{ asset('bundles/gaestebuch/css/'~csscustom|default('def')~'_lay.css') }}" />
+        {% block script %}{% endblock %}
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+    </head>
+    <body style="background-image:url('{{ asset('bundles/gaestebuch/images/bg_texture'~imgcustom|default('4')~'.jpg') }}');">
+        <div id="styleswitch"><b>Themes:
+        	<a href="{{ app.request.getbaseURL() }}/style/std">[Holz]</a>
+        	<a href="{{ app.request.getbaseURL() }}/style/stn">[Stein]</a>
+        	<a href="{{ app.request.getbaseURL() }}/style/blu">[Blau]</a>
+        </b></div>
+        {% block body %}{% endblock %}
+        {% block javascripts %}{% endblock %}
+    </body>
+</html>

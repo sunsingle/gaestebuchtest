@@ -1,0 +1,28 @@
+{% extends "::base.html.twig" %}
+
+{% block stylesheets %}<link rel="stylesheet" href="{{ asset('bundles/gaestebuch/css/default.css') }}" />{% endblock %}
+{% block script %}<script src="http://tinymce.cachefly.net/4.0/tinymce.min.js"></script>{% endblock %}
+
+{% block body %}
+<div id="body_create">
+	<img src="{{ asset('bundles/gaestebuch/images/header.png') }}" />
+	<h4>Admin Login</h4>
+	{{ form_start(form) }}
+		<table id="tbl_create" class="shadow">
+			<tr>
+				<td>{{ form_label(form.nick) }}
+				<td>{{ form_widget(form.nick) }}</td>
+			</tr>
+			<tr>
+				<td>{{ form_label(form.pass) }}</td>
+				<td>{{ form_widget(form.pass) }}</td>
+			</tr>
+			<tr>
+				<td colspan="2" style="text-align:center;">{{ form_widget(form.submit) }}</td>
+			</tr>
+		</table>
+	{{ form_end(form) }}
+	<br />
+	<font style="font-weight:bold;color:#f00;">{{ error|default("") }}</font>
+</div>
+{% endblock %}

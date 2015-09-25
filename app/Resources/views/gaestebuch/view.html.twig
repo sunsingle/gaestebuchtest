@@ -1,0 +1,37 @@
+{% extends "::base.html.twig" %}
+
+{% block stylesheets %}<link rel="stylesheet" href="{{ asset('bundles/gaestebuch/css/default.css') }}" />{% endblock %}
+
+{% block title %}Gästebuch{% endblock %}
+
+{% block body %}
+<div id="body_create">
+	<img src="{{ asset('bundles/gaestebuch/images/header.png') }}" />
+	{% for entry in entries %}
+		<div class="gbentry shadow" id="gbentry_{{ entry.id }}">
+			<span class="entrytitle gbentry_topline_name">{{ entry.name }} {{ entry.email }}</span>
+			<span class="entrytitle gbentry_topline_time">{{ entry.date|date('d.m.Y H:i') }} Uhr</span>
+			<div class="gbentry_topline"></div>
+			<div class="gbentry_content">{{ entry.entry|raw }}</div>
+			{% if login %}
+			<div class="gbentry_delete"><a href="{{ path('_edit', {'id': entry.id}) }}">&#128393; Bearbeiten</a> ♦ <a href="{{ path('_delete', {'id': entry.id}) }}">&#x2718; Löschen</a></div>
+			{% endif %}
+		</div>
+	{% endfor %}
+	<p><b>Seite:</b> 
+	{% for page in pagelinks %}
+		{% if page.active %}
+			<a href="{{ app.request.getbaseURL() }}/show/{{ page.num }}">[{{ page.num }}]</a>
+		{% else %}
+			[{{ page.num }}]
+		{% endif %}
+	{% endfor %}
+	</p>
+	<p style="font-weight:bold;">
+		<a href="{{ path('_create') }}">einen Gästebucheintrag verfassen <font style="font-size:30px;">&#128393;</font></a>
+	</p>
+</div>
+{% if login %}
+	<a href="{{ path('_logout') }}"><font style="font-size:30px;">&#128682;</font> Logout</a>
+{% endif %}
+{% endblock %}

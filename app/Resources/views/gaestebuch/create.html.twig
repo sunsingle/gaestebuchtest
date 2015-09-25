@@ -1,0 +1,35 @@
+{% extends "::base.html.twig" %}
+
+{% block stylesheets %}<link rel="stylesheet" href="{{ asset('bundles/gaestebuch/css/default.css') }}" />{% endblock %}
+{% block script %}<script src="http://tinymce.cachefly.net/4.0/tinymce.min.js"></script>{% endblock %}
+
+{% block body %}
+<div id="body_create">
+	<img src="{{ asset('bundles/gaestebuch/images/header.png') }}" />
+	<h4>{{ mformtitle|default("Einen Gästebucheintrag verfassen") }}</h4>
+	{{ form_start(form) }}
+		<table id="tbl_create" class="shadow">
+			<tr>
+				<td>{{ form_label(form.name) }}
+				<td>{{ form_widget(form.name) }}</td>
+			</tr>
+			<tr>
+				<td>{{ form_label(form.email) }}</td>
+				<td>{{ form_widget(form.email) }}</td>
+			</tr>
+			<tr>
+				<td colspan="2" style="text-align:center;padding:10px 0 10px 0;">
+					{{ form_label(form.entry) }}<br />
+					{{ form_widget(form.entry) }}
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2" style="text-align:center;">{{ form_widget(form.submit) }}</td>
+			</tr>
+		</table>
+	{{ form_end(form) }}
+	<br />
+	<font style="font-weight:bold;color:#f00;">{{ error|default("") }}</font>
+</div>
+<div id="overlay" style="display:{{ overlay_display|default("none") }};"><span id="overlay_inner">{{ overlay|default("")|raw }}</span></div>
+{% endblock %}

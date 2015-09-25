@@ -1,0 +1,6 @@
+eclipse.preferences.version=1
+encoding//app/Resources/views/gaestebuch/create.html.twig=UTF-8
+encoding//app/Resources/views/gaestebuch/view.html.twig=UTF-8
+encoding//src/AppBundle/Controller/GBEntryController.php=UTF-8
+encoding//src/AppBundle/Form/GBEntryType.php=UTF-8
+encoding/<project>=UTF-8
