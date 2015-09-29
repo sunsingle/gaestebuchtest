@@ -5,3 +5,6 @@ services:
    guestbook_manager:
       class:     AppBundle\Service\GuestbookManager
       arguments: [ "%guestbook.entries_per_page%",'@doctrine.orm.entity_manager']
+   login_manager:
+      class:     AppBundle\Service\LoginManager
+      arguments: [ '@service_container','@doctrine.orm.entity_manager' ]

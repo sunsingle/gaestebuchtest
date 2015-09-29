@@ -8,23 +8,27 @@
 	
 	<div id="body_create">
 		<img src="{{ asset('bundles/gaestebuch/images/header.png') }}" />
-		<h4>Admin Login</h4>
-		<form action="{{ path('login_check') }}" method="post">
+		<h4>Im Gästebuch registrieren</h4>
+		{{ form_start(form) }}
 			<table id="tbl_create" class="shadow">
 				<tr>
 					<td>Username:</td>
-					<td><input type="text" id="username" name="_username" value="{{ last_username }}" /></td>
+					<td>{{ form_widget(form.nick) }}</td>
 				</tr>
 				<tr>
 					<td>Passwort:</td>
-					<td><input type="password" id="password" name="_password" /></td>
+					<td>{{ form_widget(form.password.first) }}</td>
 				</tr>
 				<tr>
-					<td colspan="2" style="text-align:center;"><input type="submit" value="Login" /></td>
+					<td>Passwort wiederholen:</td>
+					<td>{{ form_widget(form.password.second) }}</td>
+				</tr>
+				<tr>
+					<td colspan="2" style="text-align:center;"><input type="submit" value="Registrieren" /></td>
 				</tr>
 			</table>
 			<input type="hidden" name="_target_path" value="_index" />
-		</form>
+		{{ form_end(form) }}
 		<br />
 		<font style="font-weight:bold;color:#f00;">{{ error|default("") }}</font>
 	</div>

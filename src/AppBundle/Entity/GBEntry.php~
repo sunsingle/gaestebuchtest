@@ -37,9 +37,9 @@ class GBEntry
 	protected $entry;
 
 	/**
-	 * @ORM\Column(type="integer", length=10, options={"default":-1}, nullable=true)
+	 * @ORM\Column(type="integer", length=10, options={"default"=-1}, nullable=true)
 	 */
-	protected $ref;
+	protected $ref = -1;
     /**
      * Get id
      *

@@ -1,0 +1,28 @@
+{% extends "::base.html.twig" %}
+
+{% block stylesheets %}<link rel="stylesheet" href="{{ asset('bundles/gaestebuch/css/default.css') }}" />{% endblock %}
+
+{% block title %}Gästebuch{% endblock %}
+
+{% block body %}
+<div id="body_create">
+	<img src="{{ asset('bundles/gaestebuch/images/header.png') }}" />
+	<h3>Vom Admin bearbeitet</h3>
+	<div class="gbentry shadow" id="gbentry_{{ entry.id }}">
+		<span class="entrytitle gbentry_topline_name">{{ entry.name }} {{ entry.email }}</span>
+		<span class="entrytitle gbentry_topline_time">{{ entry.date|date('d.m.Y H:i') }} Uhr</span>
+		<div class="gbentry_topline"></div>
+		<div class="gbentry_content">{{ entry.entry|bbcode_filter('my_default_filter') }}</div>
+	</div>
+	{% if changed is not null %}
+		<h3>Original</h3>
+		<div class="gbentry shadow" id="gbentry_{{ changed.id }}">
+			<span class="entrytitle gbentry_topline_name">{{ changed.name }} {{ changed.email }}</span>
+			<span class="entrytitle gbentry_topline_time">{{ changed.date|date('d.m.Y H:i') }} Uhr</span>
+			<div class="gbentry_topline"></div>
+			<div class="gbentry_content">{{ changed.entry|bbcode_filter('my_default_filter') }}</div>
+		</div>
+	{% endif %}
+
+</div>
+{% endblock %}

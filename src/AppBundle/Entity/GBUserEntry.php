@@ -15,7 +15,8 @@ class GBUserEntry implements UserInterface, \Serializable
 		return array('ROLE_USER');
 	}	
 	public function getSalt() {
-		return null;
+// 		return null;
+		return md5("5ALT3DH45HF0R".$this->nick);
 	}
 	public function eraseCredentials(){}
 
@@ -29,7 +30,7 @@ class GBUserEntry implements UserInterface, \Serializable
 	protected $uid;	
 	
 	/**
-	 * @ORM\Column(type="string",length=10)
+	 * @ORM\Column(type="string",length=10, unique=true)
 	 */
 	protected $nick;
 	
@@ -37,6 +38,8 @@ class GBUserEntry implements UserInterface, \Serializable
 	 * @ORM\Column(type="string", length=32)
 	 */
 	protected $pass;
+	
+	protected $salt;
 
     /**
      * Get uid
@@ -99,12 +102,12 @@ class GBUserEntry implements UserInterface, \Serializable
     /** @see \Serializable::serialize() */
     public function serialize()
     {
-    	return array(
+    	return serialize(array(
     		$this->uid,
     		$this->nick,
     		$this->pass,
     		$this->salt
-    	);
+    	));
     }
     
     /** @see \Serializable::unserialize() */
@@ -116,5 +119,25 @@ class GBUserEntry implements UserInterface, \Serializable
     		$this->pass,
     		$this->salt
     	) = unserialize($serialized);
+    }
+
+    /**
+     * Get nick
+     *
+     * @return string
+     */
+    public function getNick()
+    {
+        return $this->nick;
+    }
+
+    /**
+     * Get pass
+     *
+     * @return string
+     */
+    public function getPass()
+    {
+        return $this->pass;
     }
 }

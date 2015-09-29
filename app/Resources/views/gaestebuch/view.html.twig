@@ -13,7 +13,7 @@
 			<span class="entrytitle gbentry_topline_time">{{ entry.date|date('d.m.Y H:i') }} Uhr</span>
 			<div class="gbentry_topline"></div>
 			<div class="gbentry_content">{{ entry.entry|bbcode_filter('my_default_filter') }}</div>
-			{% if login %}
+			{% if app.user %}
 			<div class="gbentry_delete"><a href="{{ path('_edit', {'id': entry.id}) }}">&#128393; Bearbeiten</a> ♦ <a href="{{ path('_delete', {'id': entry.id}) }}" onclick="return confirm('Bist du Sicher, dass du diesen Eintrag löschen möchtest??')">&#x2718; Löschen</a></div>
 			{% endif %}
 		</div>
@@ -31,7 +31,7 @@
 		<a href="{{ path('_create') }}">einen Gästebucheintrag verfassen <font style="font-size:30px;">&#128393;</font></a>
 	</p>
 </div>
-{% if login %}
-	<a href="{{ path('_logout') }}"><font style="font-size:30px;">&#128682;</font> Logout</a>
+{% if app.user %}
+	<font style="font-size:11px;">Eingeloggt als:<b> {{ app.user.username }}</b></font><br /><a href="{{ path('_logout') }}"><font style="font-size:30px;">&#128682;</font> Logout</a>
 {% endif %}
 {% endblock %}

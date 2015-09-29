@@ -74,7 +74,7 @@ class LoginController extends Controller
 				array(
 						// last username entered by the user
 						'last_username' => $lastUsername,
-						'error'         => $error,
+						'error'         => $error!=""?"Falscher Nickname und/oder Passwort!!":$error,
 				)
 		);
 	}
@@ -91,5 +91,52 @@ class LoginController extends Controller
 		$session->set("nick",null);
 				
 		return $this->redirect($this->generateUrl("_index"));
+	}
+	
+	/**
+	 * @Route("/register", name="_register")
+	 */
+	public function registerAction()
+	{
+		$request = $this->getRequest();
+		$lay = GBEntryController::getLayoutDefinition($request->getSession());
+		
+		$form = $this->createFormBuilder()
+			->add("nick", "text")
+			->add("password","repeated", array("type" => "password", "invalid_message" => "Passwörter müssen übereinstimmen"))
+			->getForm()
+		;
+		
+		$form->handleRequest($request);
+		if ($form->isSubmitted() && $form->isValid()){
+			$mgr = $this->get('login_manager');
+			$mgr->add_encoder($this->get("security.encoder_factory"));
+			
+			$result = $mgr->registerUser($form);
+	    	switch($result){
+	    		case true:
+	    			$msg = "Registrierung erfolgreich!<br /><a href=\"".$this->generateUrl("_index")."/lastpage\">[zurück zum Gästebuch]</a>";
+	    			return $this->render(
+	    					'AppBundle:GBEntry:register.html.twig',
+	    					array('form' => $form->createView(), 'overlay' => $msg, 'overlay_display'=>'inherit','csscustom'=>$lay['css'],'imgcustom'=>$lay['img']));
+	    		case false:
+	    			$error = $mgr->getErrorMessage();
+	    		case null:
+	    			return $this->render(
+	    					'AppBundle:GBEntry:register.html.twig',
+	    					array('form' => $form->createView(), 'error' => $error,'mformtitle' => "Eintrag bearbeiten",'csscustom'=>$lay['css'],'imgcustom'=>$lay['img']));
+	    		}
+			
+		}
+		
+		return $this->render("AppBundle:GBEntry:register.html.twig",array("form"=>$form->createView(),"error"=>$mgr->getErrorMessage()));
+	}
+	
+	private function encodePassword(GBUserEntry $user, $plainPassword, $salt = false)
+	{
+		$encoder = $this->container->get("security.encoder_factory")
+						->getEncoder($user);
+		
+		return $encoder->encodePassword($plainPassword, $salt?$salt:$user->getSalt());
 	}
 }
