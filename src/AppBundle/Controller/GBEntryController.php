@@ -15,9 +15,37 @@ use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Bundle\DoctrineCacheBundle\DependencyInjection\SymfonyBridgeAdapter;
 use Doctrine\Common\Persistence\Mapping\Driver\SymfonyFileLocator;
 use Symfony\Bundle\FrameworkBundle\Templating\Helper\AssetsHelper;
+use AppBundle\Service\GuestbookManager;
 
 class GBEntryController extends Controller
 { 
+	
+	/**
+	 * @Route("/entry/{id}", name="_entry")
+	 * @param integer $id
+	 */
+	public function detailAction($id)
+	{
+		$session = $this->getRequest()->getSession();
+		$mgr = $this->get('guestbook_manager');
+		
+		$respArray = $mgr->getGuestbookFullEntry($id);
+		
+		if (is_array($respArray)){
+			$lay = self::getLayoutDefinition($session);
+			 
+			return $this->render("gaestebuch/detail.html.twig", array(
+					"entry" 	=> $respArray["entry"],
+					"changed" 	=> $respArray["ref"],
+					'csscustom'	=>$lay['css'],
+					'imgcustom'	=>$lay['img']
+			));
+		}
+		else{
+			return new Response("Nope",404);
+		}
+	}
+	
     /**
      * @Route("/show/{page}", name="_index", defaults={"page" = 1} )
      */
@@ -29,7 +57,7 @@ class GBEntryController extends Controller
     	$mgr = $this->get('guestbook_manager');
     	
     	$response = $mgr->getGuestbook($page,$sumPages);
-    	
+    	 
     	$pageLinks = array();
     		
     	for($i = 1; $i <= $sumPages; $i++)
@@ -47,7 +75,7 @@ class GBEntryController extends Controller
     	
     	$entries = array();
     	foreach ($response AS $gbentry){
-    		$preTxt = ($gbentry->getRef() != -1) ? "[b][color=#700]*** vom Admin bearbeitet ***[/color][/b][br]" : "";
+    		$preTxt = ($gbentry->getRef() != -1) ? "[b][url=".$this->generateUrl("_entry",array("id"=>$gbentry->getId()))."][color=#700]*** vom Admin bearbeitet ***[/color][/url][/b][br]" : "";
     		$gbentry->setEntry($preTxt.$gbentry->getEntry());
     		$entries[] = $gbentry;
     	}
@@ -68,44 +96,30 @@ class GBEntryController extends Controller
     public function createFormAction()
     {
     	$form = $this->get('form.factory')->create(new GBEntryType());
-    	$error = "";
     	
     	$req = $this->getRequest();
     	$form->handleRequest($req);
-    	
-    	
-    	if ($form->isValid())
-    	{
-    		$data = $form->getData();
+
+    	$mgr = $this->get('guestbook_manager');
     		
-    		$entry = new GBEntry();
-    		$entry->setDate(new \DateTime("now"));
-    		$entry->setEmail($data['email']);
-    		$entry->setEntry(($data['entry']));
-    		$entry->setName($data['name']);
-    		
-    		$em = $this->getDoctrine()->getManager();
-    		
-    		$em->persist($entry);
-    		$em->flush();
-    		
-//     		return $this->redirect($this->generateUrl("_index"));
+    	if ($mgr->addGuestbookEntry($form)){
     		$msg = "Dein Gästebucheintrag war erfolgreich!<br /><a href=\"".$this->generateUrl("_index")."/lastpage\">[zurück zum Gästebuch]</a>";
-    		
+    			
     		return $this->render(
-    				'gaestebuch/create.html.twig',
-    				array('form' => $form->createView(), 'error' => $error, 'overlay' => $msg, 'overlay_display'=>'inherit'));
-    	}elseif ($form->isSubmitted()){
-    		$error = (String)$form->getErrors(true);
+    			'gaestebuch/create.html.twig',
+    			array('form' => $form->createView(), 'overlay' => $msg, 'overlay_display'=>'inherit'));
     	}
-    	
-    	
-    	
+    	else {
+    		return $this->render(
+    			'gaestebuch/create.html.twig',
+    			array('form' => $form->createView(), 'error' => $mgr->getErrorMessage()));
+    	}
+
     	$lay = self::getLayoutDefinition($this->getRequest()->getSession());
     	
     	return $this->render(
     			'gaestebuch/create.html.twig', 
-    			array('form' => $form->createView(), 'error' => $error,'csscustom'=>$lay['css'],'imgcustom'=>$lay['img']));
+    			array('form' => $form->createView(), 'error' => $mgr->getErrorMessage(),'csscustom'=>$lay['css'],'imgcustom'=>$lay['img']));
     }
 
     /**
@@ -117,15 +131,14 @@ class GBEntryController extends Controller
     	 
     	if ($session->get("nick",false))
     	{
-    		$em = $this->getDoctrine()->getManager();
-    		$entity = $em->getRepository('AppBundle:GBEntry')->find($id);
-    		if (!$entity) {
-    			throw $this->createNotFoundException('Unable to find Phonelist entity.');
+    		$mgr = $this->get('guestbook_manager');
+    		if ($mgr->deleteGuestbookEntry($id)){
+    			return $this->redirect($this->getRequest()->headers->get('referer'));
     		}
-    		$em->remove($entity);
-    		$em->flush();
-    
-    		return $this->redirect($this->getRequest()->headers->get('referer'));
+    		else{
+    			// TODO Show Error 
+    			// $mgr->getErrorMessage()
+    		}
     	}
     	return $this->redirect($this->generateUrl("_login"));
     }
@@ -134,71 +147,42 @@ class GBEntryController extends Controller
      */
     public function editAction($id)
     {
-    	$em = $this->getDoctrine()->getManager();
-    	$entity = $em->getRepository("AppBundle:GBEntry")->find($id);
-    	
-    	$error = "";
-    	
-    	$form = $this->createForm(
-    			new GBEntryType(true),
-    			array("id"=>$id,"name"=>$entity->getName(),"email"=>$entity->getEmail(),"entry"=>$entity->getEntry())
-    			);
-    	
-    	
     	$req = $this->getRequest();
-    	$form->handleRequest($req);
-    	 
     	$session = $req->getSession();
     	$lay = self::getLayoutDefinition($session);
-    
+    	 
     	if ($session->get("nick",false))
     	{
-    		if ($form->isValid())
-    		{
-    			$data = $form->getData();
-    			
-    			$entity->setRef(1);
-    			$entity->setEntry(mysql_real_escape_string($data['entry']));
-    			$em->persist($entity);
-    			$em->flush();
-    		
-//     			$entry = new GBEntry();
-//     			$entry->setDate(new \DateTime("now"));
-//     			$entry->setEmail($data['email']);
-//     			$entry->setEntry();
-//     			$entry->setName($data['name']);
-//     			$entry->setRef(-2);
-    		
-//     			$em = $this->getDoctrine()->getManager();
-//     			$entry = $em->getRepository('AppBundle:GBEntry')->find($id);
-    		
-//     			$em->persist($entry);
-//     			$em->flush();
-    		
-    			$msg = "Update erfolgreich!<br /><a href=\"".$this->generateUrl("_index")."/lastpage\">[zurück zum Gästebuch]</a>";
-    		
-    			return $this->render(
-    					'gaestebuch/create.html.twig',
-    					array('form' => $form->createView(), 'error' => $error, 'overlay' => $msg, 'overlay_display'=>'inherit'));
-    			
-    		}
-    		elseif ($form->isSubmitted())
-    		{
-    			$error = (String)$form->getErrors(true);
-    		}
-    		$em = $this->getDoctrine()->getManager();
-    		$entity = $em->getRepository('AppBundle:GBEntry')->find($id);
-    		if (!$entity) 
-    		{
-    			$error = 'Keinen Eintrag zu dieser ID gefunden.';
-    		}
-    		$em->flush();
-    
-    		return $this->render(
-    			'gaestebuch/create.html.twig', 
-    			array('form' => $form->createView(), 'error' => $error,'mformtitle' => "Eintrag bearbeiten",'csscustom'=>$lay['css'],'imgcustom'=>$lay['img']));
+	    	$mgr = $this->get('guestbook_manager');
+	    	$entity = $mgr->getGuestbookEntry($id);
+	    	if ($entity){
+	    		$form = $this->createForm(
+	    				new GBEntryType(true),
+	    				array("id"=>$entity->getId() ,"name"=>$entity->getName(),"email"=>$entity->getEmail(),"entry"=>$entity->getEntry())
+	    		);
+	    		$form->handleRequest($req);
+	    		$result = $mgr->editGuestbookEntry($form, $entity);
+	    		switch($result){
+	    			case true:
+	    				$msg = "Update erfolgreich!<br /><a href=\"".$this->generateUrl("_index")."/lastpage\">[zurück zum Gästebuch]</a>";
+	    				return $this->render(
+	    						'gaestebuch/create.html.twig',
+	    						array('form' => $form->createView(), 'overlay' => $msg, 'overlay_display'=>'inherit'));
+	    			case false:
+	    				$error = $mgr->getErrorMessage();
+	    			case null:
+	    				return $this->render(
+	    						'gaestebuch/create.html.twig',
+	    						array('form' => $form->createView(), 'error' => $error,'mformtitle' => "Eintrag bearbeiten",'csscustom'=>$lay['css'],'imgcustom'=>$lay['img']));
+	    		}
+	    	}
+	    	else{
+	    		$error = $mgr->getErrorMessage();
+	    	}
     	}
-    	return $this->redirect($this->generateUrl("_login"));
+    	else{
+    		return $this->redirect($this->generateUrl("_login"));
+    	}
     }
     		 
     public static function getLayoutDefinition(Session $session)

@@ -3,13 +3,24 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping AS ORM;
 use Doctrine\ORM\Mapping\Id;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="gbuser")
  */
-class GBUserEntry
+class GBUserEntry implements UserInterface, \Serializable
 {
+	public function getRoles() {
+		return array('ROLE_USER');
+	}	
+	public function getSalt() {
+		return null;
+	}
+	public function eraseCredentials(){}
+
+
+	
 	/**
 	 * @ORM\Column(type="integer",length=3)
 	 * @ORM\Id
@@ -56,7 +67,7 @@ class GBUserEntry
      *
      * @return string
      */
-    public function getNick()
+    public function getUsername()
     {
         return $this->nick;
     }
@@ -80,8 +91,30 @@ class GBUserEntry
      *
      * @return string
      */
-    public function getPass()
+    public function getPassword()
     {
         return $this->pass;
+    }
+    
+    /** @see \Serializable::serialize() */
+    public function serialize()
+    {
+    	return array(
+    		$this->uid,
+    		$this->nick,
+    		$this->pass,
+    		$this->salt
+    	);
+    }
+    
+    /** @see \Serializable::unserialize() */
+    public function unserialize($serialized)
+    {
+    	list (
+    		$this->uid,
+    		$this->nick,
+    		$this->pass,
+    		$this->salt
+    	) = unserialize($serialized);
     }
 }

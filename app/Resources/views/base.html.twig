@@ -9,11 +9,11 @@
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
     </head>
     <body style="background-image:url('{{ asset('bundles/gaestebuch/images/bg_texture'~imgcustom|default('4')~'.jpg') }}');">
-        <div id="styleswitch"><b>Themes:
+        <div id="styleswitch">Themes:
         	<a href="{{ app.request.getbaseURL() }}/style/std">[Holz]</a>
         	<a href="{{ app.request.getbaseURL() }}/style/stn">[Stein]</a>
         	<a href="{{ app.request.getbaseURL() }}/style/blu">[Blau]</a>
-        </b></div>
+        </div>
         {% block body %}{% endblock %}
         {% block javascripts %}{% endblock %}
     </body>

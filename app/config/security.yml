@@ -6,6 +6,10 @@ security:
     providers:
         in_memory:
             memory: ~
+        user_db_provider:
+            entity: 
+                class: AppBundle:GBUserEntry
+                property: nick
 
     firewalls:
         # disables authentication for assets and the profiler, adapt it according to your needs
@@ -19,6 +23,11 @@ security:
 
             # http_basic: ~
             # http://symfony.com/doc/current/book/security.html#a-configuring-how-your-users-will-authenticate
-
-            # form_login: ~
+            provider: user_db_provider
+            form_login:
+                login_path: /login
+                check_path: /login_check
+            logout:
+                path: /logout
+                target: /login
             # http://symfony.com/doc/current/cookbook/security/form_login_setup.html

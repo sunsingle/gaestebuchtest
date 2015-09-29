@@ -14,7 +14,7 @@
 			<div class="gbentry_topline"></div>
 			<div class="gbentry_content">{{ entry.entry|bbcode_filter('my_default_filter') }}</div>
 			{% if login %}
-			<div class="gbentry_delete"><a href="{{ path('_edit', {'id': entry.id}) }}">&#128393; Bearbeiten</a> ♦ <a href="{{ path('_delete', {'id': entry.id}) }}">&#x2718; Löschen</a></div>
+			<div class="gbentry_delete"><a href="{{ path('_edit', {'id': entry.id}) }}">&#128393; Bearbeiten</a> ♦ <a href="{{ path('_delete', {'id': entry.id}) }}" onclick="return confirm('Bist du Sicher, dass du diesen Eintrag löschen möchtest??')">&#x2718; Löschen</a></div>
 			{% endif %}
 		</div>
 	{% endfor %}

@@ -6,13 +6,16 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use AppBundle\Form\GBUserType;
 use AppBundle\Entity\GBUserEntry;
+use Symfony\Component\BrowserKit\Request;
+use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class LoginController extends Controller
 {
+	
 	/**
-	 * @Route("/login", name="_login")
+	 * @Route("/loginx", name="_loginx")
 	 */
-	public function loginAction(){
+	public function loginxAction(){
 		$session = $this->getRequest()->getSession();
 		
 		$form = $this->get('form.factory')->create(new GBUserType());
@@ -31,7 +34,7 @@ class LoginController extends Controller
 			
 			$rep = $em->getRepository("AppBundle:GBUserEntry");
 			
-			$response = $rep->findBy(array("nick"=> mysql_real_escape_string($data['nick']), "pass" => md5($data['pass']) ));
+			$response = $rep->findBy(array("nick"=> ($data['nick']), "pass" => md5($data['pass']) ));
 			
 			if (count($response))
 			{
@@ -55,6 +58,30 @@ class LoginController extends Controller
 				'imgcustom'=>$lay['img']
 		));
 	}
+	/**
+	 * @Route("/login", name="_login")
+	 * @param Request $request
+	 */
+	public function loginAction()
+	{
+		$authenticationUtils = $this->get('security.authentication_utils');
+		// get the login error if there is one
+		$error = $authenticationUtils->getLastAuthenticationError();
+		// last username entered by the user
+		$lastUsername = $authenticationUtils->getLastUsername();
+		return $this->render(
+				'AppBundle:GBEntry:login.html.twig',
+				array(
+						// last username entered by the user
+						'last_username' => $lastUsername,
+						'error'         => $error,
+				)
+		);
+	}
+	/**
+	 * @Route("/login_check", name="login_check")
+	 */
+	public function loginCheckAction(){}
 	/**
 	 * @Route("/logout", name="_logout")
 	 */

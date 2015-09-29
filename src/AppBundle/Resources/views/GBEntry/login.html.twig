@@ -4,25 +4,31 @@
 {% block script %}<script src="http://tinymce.cachefly.net/4.0/tinymce.min.js"></script>{% endblock %}
 
 {% block body %}
-<div id="body_create">
-	<img src="{{ asset('bundles/gaestebuch/images/header.png') }}" />
-	<h4>Admin Login</h4>
-	{{ form_start(form) }}
-		<table id="tbl_create" class="shadow">
-			<tr>
-				<td>{{ form_label(form.nick) }}
-				<td>{{ form_widget(form.nick) }}</td>
-			</tr>
-			<tr>
-				<td>{{ form_label(form.pass) }}</td>
-				<td>{{ form_widget(form.pass) }}</td>
-			</tr>
-			<tr>
-				<td colspan="2" style="text-align:center;">{{ form_widget(form.submit) }}</td>
-			</tr>
-		</table>
-	{{ form_end(form) }}
-	<br />
-	<font style="font-weight:bold;color:#f00;">{{ error|default("") }}</font>
-</div>
+
+	{% if error %}
+		<div>{{ error.messageKey|trans(error.messageData,'security') }}</div>
+	{% endif %}
+	
+	<div id="body_create">
+		<img src="{{ asset('bundles/gaestebuch/images/header.png') }}" />
+		<h4>Admin Login</h4>
+		<form action="{{ path('login_check') }}" method="post">
+			<table id="tbl_create" class="shadow">
+				<tr>
+					<td>Username:</td>
+					<td><input type="text" id="username" name="_username" value="{{ last_username }}" /></td>
+				</tr>
+				<tr>
+					<td>Passwort:</td>
+					<td><input type="password" id="password" name="_password" /></td>
+				</tr>
+				<tr>
+					<td colspan="2" style="text-align:center;"><input type="submit" value="Login" /></td>
+				</tr>
+			</table>
+			<input type="hidden" name="_target_path" value="_show" />
+		</form>
+		<br />
+		<font style="font-weight:bold;color:#f00;">{{ error|default("") }}</font>
+	</div>
 {% endblock %}
