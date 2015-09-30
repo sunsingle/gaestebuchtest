@@ -16,19 +16,21 @@ use Doctrine\Bundle\DoctrineCacheBundle\DependencyInjection\SymfonyBridgeAdapter
 use Doctrine\Common\Persistence\Mapping\Driver\SymfonyFileLocator;
 use Symfony\Bundle\FrameworkBundle\Templating\Helper\AssetsHelper;
 use AppBundle\Service\GuestbookManager;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 class GBEntryController extends Controller
 { 
 	
 	/**
-	 * @Route("/entry/{id}", name="_entry")
+	 * @Route("/entry/{gid}", name="_entry")
+	 * @ParamConverter("entry", class="AppBundle:GBEntry", options={"id"="gid"})
 	 * @param integer $id
 	 */
-	public function detailAction($id)
+	public function detailAction($entry)
 	{
 		$mgr = $this->get('guestbook_manager');
 		
-		$respArray = $mgr->getGuestbookFullEntry($id);
+		$respArray = $mgr->getGuestbookFullEntry($entry);
 		
 		if (is_array($respArray)){
 			return $this->render("gaestebuch/detail.html.twig", array(
@@ -46,9 +48,8 @@ class GBEntryController extends Controller
      */
     public function viewAction($page)
     {
-    	$sumPages = $login = false;
-    	$session = $this->getRequest()->getSession();
-    	
+    	$sumPages = 0;
+
     	$mgr = $this->get('guestbook_manager');
     	
     	$response = $mgr->getGuestbook($page,$sumPages);
@@ -63,21 +64,16 @@ class GBEntryController extends Controller
     			
     			$pageLinks[] = $link;
     	}
-
-
-    	if ($session->get("nick",false))
-    		$login = true;
     	
     	$entries = array();
     	foreach ($response AS $gbentry){
-    		$preTxt = ($gbentry->getRef() != -1) ? "[b][url=".$this->generateUrl("_entry",array("id"=>$gbentry->getId()))."][color=#700]*** vom Admin bearbeitet ***[/color][/url][/b][br]" : "";
+    		$preTxt = ($gbentry->getRef() != -1) ? "[b][url=".$this->generateUrl("_entry",array("gid"=>$gbentry->getId()))."][color=#700]*** vom Admin bearbeitet ***[/color][/url][/b][br]" : "";
     		$gbentry->setEntry($preTxt.$gbentry->getEntry());
     		$entries[] = $gbentry;
     	}
 		return $this->render("gaestebuch/view.html.twig", array(
     			"entries" => $entries,
-    			"pagelinks" => $pageLinks,
-    			"login" => $login
+    			"pagelinks" => $pageLinks
     	));
     }
 
@@ -111,19 +107,21 @@ class GBEntryController extends Controller
     }
 
     /**
-     * @Route("/delete/{id}", name="_delete")
+     * @Route("/delete/{gid}", name="_delete")
+     * @ParamConverter("entry", class="AppBundle:GBEntry", options={"id"="gid"})
      */
-    public function deleteAction($id)
+    public function deleteAction(GBEntry $entry)
     {
-    	$session = $this->getRequest()->getSession();
+    	$session = $this->getUser();
     	 
-    	if ($session->get("nick",false))
+    	if ($session != null)
     	{
     		$mgr = $this->get('guestbook_manager');
-    		if ($mgr->deleteGuestbookEntry($id)){
+    		if ($mgr->deleteGuestbookEntry($entry)){
     			return $this->redirect($this->getRequest()->headers->get('referer'));
     		}
     		else{
+    			return new Response($mgr->getErrorMessage());
     			// TODO Show Error 
     			// $mgr->getErrorMessage()
     		}
@@ -136,9 +134,9 @@ class GBEntryController extends Controller
     public function editAction($id)
     {
     	$req = $this->getRequest();
-    	$session = $req->getSession();
+    	$session = $this->getUser();
     	 
-    	if ($session->get("nick",false))
+    	if ($session!= null)
     	{
 	    	$mgr = $this->get('guestbook_manager');
 	    	$entity = $mgr->getGuestbookEntry($id);

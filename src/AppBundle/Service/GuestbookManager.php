@@ -31,12 +31,11 @@ class GuestbookManager
 	}
 	
 	/**
-	 * @param integer $id
+	 * @param GBEntry $entry
 	 */
-	public function getGuestbookFullEntry($id)
+	public function getGuestbookFullEntry(GBEntry $entry)
 	{
 		$ref = null;
-		$entry = $this->getGuestbookEntry($id);
 		if ($entry != null){
 			if ($entry->getRef() != -1){
 				$ref = $this->getGuestbookEntry($entry->getRef());
@@ -67,6 +66,9 @@ class GuestbookManager
 	public function editGuestbookEntry(FormInterface $form, GBEntry $entity)
 	{
 		if ($form->isValid()){
+			if ($entity->getRef() != -1){
+				$this->deleteGuestbookEntry($this->getGuestbookEntry($entity->getRef()));
+			}
 			$refId = $this->addGuestbookEntryAsData($entity->getName(), $entity->getEmail(), $entity->getEntry(), -2);
 			
 			$data = $form->getData();
@@ -92,22 +94,26 @@ class GuestbookManager
 	}
 	
 	/**
-	 * @param integer $id ID of GuestbookEntry to delete
+	 * @param GBEntry $entry GuestbookEntry to delete
 	 * @return boolean success
 	 */
-	public function deleteGuestbookEntry($id)
+	public function deleteGuestbookEntry(GBEntry $entry)
 	{
-		$rep = $this->emanager->getRepository('AppBundle:GBEntry');
-		
-		$entity = $rep->find($id);
-		if (!$entity) {
+		if (!$entry) {
 			$this->errormessage = "Eintrag nicht gefunden!";
 			return false;
 		}
 		try{
-			$this->deleteGuestbookEntry($entity->getRef());
-			$this->emanager->remove($entity);
-			$this->emanager->flush();
+			$ref = $entry->getRef();
+			if ($ref != -1) {
+				$rep = $this->emanager->getRepository('AppBundle:GBEntry');
+				$entity = $rep->find($ref);
+
+				if ($ref != -2)
+					$this->deleteGuestbookEntry($entity);
+				$this->emanager->remove($entry);
+				$this->emanager->flush();
+			}
 		}catch(Exception $ex){
 			$this->errormessage = $ex->getMessage();
 			return false;
