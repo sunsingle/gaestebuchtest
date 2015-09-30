@@ -50,12 +50,9 @@ class LoginController extends Controller
 		{
 			$error = (String)$form->getErrors(true);
 		}
-		$lay = GBEntryController::getLayoutDefinition($session);
 		return $this->render('AppBundle:GBEntry:login.html.twig',array(
 				'form' => $form->createView(), 
-				'error' => $error,
-				'csscustom'=>$lay['css'],
-				'imgcustom'=>$lay['img']
+				'error' => $error
 		));
 	}
 	/**
@@ -99,7 +96,6 @@ class LoginController extends Controller
 	public function registerAction()
 	{
 		$request = $this->getRequest();
-		$lay = GBEntryController::getLayoutDefinition($request->getSession());
 		
 		$form = $this->createFormBuilder()
 			->add("nick", "text")
@@ -124,7 +120,7 @@ class LoginController extends Controller
 	    		case null:
 	    			return $this->render(
 	    					'AppBundle:GBEntry:register.html.twig',
-	    					array('form' => $form->createView(), 'error' => $error,'mformtitle' => "Eintrag bearbeiten",'csscustom'=>$lay['css'],'imgcustom'=>$lay['img']));
+	    					array('form' => $form->createView(), 'error' => $error,'mformtitle' => "Eintrag bearbeiten"));
 	    		}
 			
 		}

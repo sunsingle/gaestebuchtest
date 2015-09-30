@@ -26,19 +26,14 @@ class GBEntryController extends Controller
 	 */
 	public function detailAction($id)
 	{
-		$session = $this->getRequest()->getSession();
 		$mgr = $this->get('guestbook_manager');
 		
 		$respArray = $mgr->getGuestbookFullEntry($id);
 		
 		if (is_array($respArray)){
-			$lay = self::getLayoutDefinition($session);
-			 
 			return $this->render("gaestebuch/detail.html.twig", array(
 					"entry" 	=> $respArray["entry"],
-					"changed" 	=> $respArray["ref"],
-					'csscustom'	=>$lay['css'],
-					'imgcustom'	=>$lay['img']
+					"changed" 	=> $respArray["ref"]
 			));
 		}
 		else{
@@ -79,14 +74,10 @@ class GBEntryController extends Controller
     		$gbentry->setEntry($preTxt.$gbentry->getEntry());
     		$entries[] = $gbentry;
     	}
-		$lay = self::getLayoutDefinition($session);
-    	
-    	return $this->render("gaestebuch/view.html.twig", array(
+		return $this->render("gaestebuch/view.html.twig", array(
     			"entries" => $entries,
     			"pagelinks" => $pageLinks,
-    			"login" => $login,
-    			'csscustom'=>$lay['css'],
-    			'imgcustom'=>$lay['img']
+    			"login" => $login
     	));
     }
 
@@ -114,12 +105,9 @@ class GBEntryController extends Controller
     			'gaestebuch/create.html.twig',
     			array('form' => $form->createView(), 'error' => $mgr->getErrorMessage()));
     	}
-
-    	$lay = self::getLayoutDefinition($this->getRequest()->getSession());
-    	
     	return $this->render(
     			'gaestebuch/create.html.twig', 
-    			array('form' => $form->createView(), 'error' => $mgr->getErrorMessage(),'csscustom'=>$lay['css'],'imgcustom'=>$lay['img']));
+    			array('form' => $form->createView(), 'error' => $mgr->getErrorMessage()));
     }
 
     /**
@@ -149,7 +137,6 @@ class GBEntryController extends Controller
     {
     	$req = $this->getRequest();
     	$session = $req->getSession();
-    	$lay = self::getLayoutDefinition($session);
     	 
     	if ($session->get("nick",false))
     	{
@@ -173,7 +160,7 @@ class GBEntryController extends Controller
 	    			case null:
 	    				return $this->render(
 	    						'gaestebuch/create.html.twig',
-	    						array('form' => $form->createView(), 'error' => $error,'mformtitle' => "Eintrag bearbeiten",'csscustom'=>$lay['css'],'imgcustom'=>$lay['img']));
+	    						array('form' => $form->createView(), 'error' => $error,'mformtitle' => "Eintrag bearbeiten"));
 	    		}
 	    	}
 	    	else{
@@ -183,23 +170,5 @@ class GBEntryController extends Controller
     	else{
     		return $this->redirect($this->generateUrl("_login"));
     	}
-    }
-    		 
-    public static function getLayoutDefinition(Session $session)
-    {
-    	$lay = $session->get("lay","def");
-    	switch($lay){
-    		case "def": 
-    			$img = "4"; $css = "def"; break;
-    		case "blu":
-    			$img = "2"; $css = "blu"; break;
-    		case "stn":
-    			$img = "3"; $css = "stn"; break;
-    		default:
-    			$img = "4"; $css = "def";
-    	}
-    	
-        	
-    	return array("css" => $css, "img" => $img);
     }
 }
