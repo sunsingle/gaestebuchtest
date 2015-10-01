@@ -10,11 +10,11 @@
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
     </head>
     <body style="background-image:url('{{ myimg() }}');">
-        <div id="styleswitch">Themes:
-        	<a href="{{ app.request.getbaseURL() }}/style/std">[Holz]</a>
-        	<a href="{{ app.request.getbaseURL() }}/style/stn">[Stein]</a>
-        	<a href="{{ app.request.getbaseURL() }}/style/blu">[Blau]</a>
-        	<a href="{{ app.request.getbaseURL() }}/style/blk">[Schwarz]</a>
+        <div id="styleswitch">{% trans %}page.theme{% endtrans %}:
+        	<a href="{{ app.request.getbaseURL() }}/style/std">[{% trans %}page.theme.wood{% endtrans %}]</a>
+        	<a href="{{ app.request.getbaseURL() }}/style/stn">[{% trans %}page.theme.stone{% endtrans %}]</a>
+        	<a href="{{ app.request.getbaseURL() }}/style/blu">[{% trans %}page.theme.blue{% endtrans %}]</a>
+        	<a href="{{ app.request.getbaseURL() }}/style/blk">[{% trans %}page.theme.neon{% endtrans %}]</a>
         </div>
         {% block body %}{% endblock %}
         {% block javascripts %}{% endblock %}

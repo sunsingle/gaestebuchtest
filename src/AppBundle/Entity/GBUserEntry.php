@@ -29,15 +29,14 @@ class GBUserEntry implements UserInterface, \Serializable
 	 */
 	protected $uid;	
 	
-	/**
-	 * @ORM\Column(type="string",length=10, unique=true)
-	 */
+	/** @ORM\Column(type="string",length=10, unique=true) */
 	protected $nick;
 	
-	/**
-	 * @ORM\Column(type="string", length=32)
-	 */
+	/** @ORM\Column(type="string", length=32) */
 	protected $pass;
+	
+	/** @ORM\Column(type="string", length=5) */
+	protected $locale;
 	
 	protected $salt;
 
@@ -139,5 +138,29 @@ class GBUserEntry implements UserInterface, \Serializable
     public function getPass()
     {
         return $this->pass;
+    }
+
+    /**
+     * Set locale
+     *
+     * @param string $locale
+     *
+     * @return GBUserEntry
+     */
+    public function setLocale($locale)
+    {
+        $this->locale = $locale;
+
+        return $this;
+    }
+
+    /**
+     * Get locale
+     *
+     * @return string
+     */
+    public function getLocale()
+    {
+        return $this->locale;
     }
 }

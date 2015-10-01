@@ -8,23 +8,23 @@
 	
 	<div id="body_create">
 		<img src="{{ asset('bundles/gaestebuch/images/header.png') }}" />
-		<h4>Im Gästebuch registrieren</h4>
+		<h4>{% trans %}Im Gästebuch registrieren{% endtrans %}</h4>
 		{{ form_start(form) }}
 			<table id="tbl_create" class="shadow">
 				<tr>
-					<td>Username:</td>
+					<td>{% trans %}Username{% endtrans %}:</td>
 					<td>{{ form_widget(form.nick) }}</td>
 				</tr>
 				<tr>
-					<td>Passwort:</td>
+					<td>{% trans %}Passwort{% endtrans %}:</td>
 					<td>{{ form_widget(form.password.first) }}</td>
 				</tr>
 				<tr>
-					<td>Passwort wiederholen:</td>
+					<td>{% trans %}Passwort wiederholen{% endtrans %}:</td>
 					<td>{{ form_widget(form.password.second) }}</td>
 				</tr>
 				<tr>
-					<td colspan="2" style="text-align:center;"><input type="submit" value="Registrieren" /></td>
+					<td colspan="2" style="text-align:center;"><input type="submit" value="{% trans %}Registrieren{% endtrans %}" /></td>
 				</tr>
 			</table>
 			<input type="hidden" name="_target_path" value="_index" />

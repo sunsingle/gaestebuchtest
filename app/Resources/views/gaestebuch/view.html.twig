@@ -2,7 +2,7 @@
 
 {% block stylesheets %}<link rel="stylesheet" href="{{ asset('bundles/gaestebuch/css/default.css') }}" />{% endblock %}
 
-{% block title %}Gästebuch{% endblock %}
+{% block title %}{% trans %}gbentry.title{% endtrans %}{% endblock %}
 
 {% block body %}
 <div id="body_create">
@@ -14,11 +14,11 @@
 			<div class="gbentry_topline"></div>
 			<div class="gbentry_content">{{ entry.entry|bbcode_filter('my_default_filter') }}</div>
 			{% if app.user %}
-			<div class="gbentry_delete"><a href="{{ path('_edit', {'id': entry.id}) }}">&#128393; Bearbeiten</a> ♦ <a href="{{ path('_delete', {'gid': entry.id}) }}" onclick="return confirm('Bist du Sicher, dass du diesen Eintrag löschen möchtest??')">&#x2718; Löschen</a></div>
+			<div class="gbentry_delete"><a href="{{ path('_edit', {'id': entry.id}) }}">&#128393; {% trans %}gbentry.edit{% endtrans %}</a> ♦ <a href="{{ path('_delete', {'gid': entry.id}) }}" onclick="return confirm('{% trans %}gbentry.confirm{% endtrans %}')">&#x2718; {% trans %}gbentry.delete{% endtrans %}</a></div>
 			{% endif %}
 		</div>
 	{% endfor %}
-	<p><b>Seite:</b> 
+	<p><b>{% trans %} gbentry.page {% endtrans %}:</b> 
 	{% for page in pagelinks %}
 		{% if page.active %}
 			<a href="{{ app.request.getbaseURL() }}/show/{{ page.num }}">[{{ page.num }}]</a>
@@ -28,10 +28,10 @@
 	{% endfor %}
 	</p>
 	<p style="font-weight:bold;">
-		<a href="{{ path('_create') }}">einen Gästebucheintrag verfassen <font style="font-size:30px;">&#128393;</font></a>
+		<a href="{{ path('_create') }}">{% trans %}gbentry.create{% endtrans %} <font style="font-size:30px;">&#128393;</font></a>
 	</p>
 </div>
 {% if app.user %}
-	<font style="font-size:11px;">Eingeloggt als:<b> {{ app.user.username }}</b></font><br /><a href="{{ path('_logout') }}"><font style="font-size:30px;">&#128682;</font> Logout</a>
+	<font style="font-size:11px;">{% trans %}page.logas{% endtrans %}:<b> {{ app.user.username }}</b></font><br /><a href="{{ path('_logout') }}"><font style="font-size:30px;">&#128682;</font> {% trans %}page.logout{% endtrans %}</a>
 {% endif %}
 {% endblock %}

@@ -61,6 +61,7 @@ class LoginController extends Controller
 	 */
 	public function loginAction()
 	{
+		$t = $this->get("translator");
 		$authenticationUtils = $this->get('security.authentication_utils');
 		// get the login error if there is one
 		$error = $authenticationUtils->getLastAuthenticationError();
@@ -71,7 +72,7 @@ class LoginController extends Controller
 				array(
 						// last username entered by the user
 						'last_username' => $lastUsername,
-						'error'         => $error!=""?"Falscher Nickname und/oder Passwort!!":$error,
+						'error'         => $error!=""?$t->trans("form.log.err"):$error,
 				)
 		);
 	}
@@ -95,11 +96,12 @@ class LoginController extends Controller
 	 */
 	public function registerAction()
 	{
+		$t = $this->get("translator");
 		$request = $this->getRequest();
 		
 		$form = $this->createFormBuilder()
 			->add("nick", "text")
-			->add("password","repeated", array("type" => "password", "invalid_message" => "Passwörter müssen übereinstimmen"))
+			->add("password","repeated", array("type" => "password", "invalid_message" => $t->trans("form.pass.inval")))
 			->getForm()
 		;
 		
@@ -111,10 +113,10 @@ class LoginController extends Controller
 			$result = $mgr->registerUser($form);
 	    	switch($result){
 	    		case true:
-	    			$msg = "Registrierung erfolgreich!<br /><a href=\"".$this->generateUrl("_index")."/lastpage\">[zurück zum Gästebuch]</a>";
+	    			$msg = $t->trans("form.reg.suc")."<br /><a href=\"".$this->generateUrl("_index")."/lastpage\">[".$t->trans("page.back.gb")."]</a>";
 	    			return $this->render(
 	    					'AppBundle:GBEntry:register.html.twig',
-	    					array('form' => $form->createView(), 'overlay' => $msg, 'overlay_display'=>'inherit','csscustom'=>$lay['css'],'imgcustom'=>$lay['img']));
+	    					array('form' => $form->createView(), 'overlay' => $msg, 'overlay_display'=>'inherit'));
 	    		case false:
 	    			$error = $mgr->getErrorMessage();
 	    		case null:

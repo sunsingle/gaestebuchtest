@@ -8,19 +8,19 @@
 	
 	<div id="body_create">
 		<img src="{{ asset('bundles/gaestebuch/images/header.png') }}" />
-		<h4>Admin Login</h4>
+		<h4>{% trans %}page.logad{% endtrans %}</h4>
 		<form action="{{ path('login_check') }}" method="post">
 			<table id="tbl_create" class="shadow">
 				<tr>
-					<td>Username:</td>
+					<td>{% trans %}form.nick{% endtrans %}:</td>
 					<td><input type="text" id="username" name="_username" value="{{ last_username }}" /></td>
 				</tr>
 				<tr>
-					<td>Passwort:</td>
+					<td>{% trans %}form.pass{% endtrans %}:</td>
 					<td><input type="password" id="password" name="_password" /></td>
 				</tr>
 				<tr>
-					<td colspan="2" style="text-align:center;"><input type="submit" value="Login" /></td>
+					<td colspan="2" style="text-align:center;"><input type="submit" value="{% trans %}page.login{% endtrans %}" /></td>
 				</tr>
 			</table>
 			<input type="hidden" name="_target_path" value="_index" />

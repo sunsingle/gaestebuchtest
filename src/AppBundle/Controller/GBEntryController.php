@@ -82,6 +82,7 @@ class GBEntryController extends Controller
      */
     public function createFormAction()
     {
+    	$trans = $this->get("translator");
     	$form = $this->get('form.factory')->create(new GBEntryType());
     	
     	$req = $this->getRequest();
@@ -90,7 +91,7 @@ class GBEntryController extends Controller
     	$mgr = $this->get('guestbook_manager');
     		
     	if ($mgr->addGuestbookEntry($form)){
-    		$msg = "Dein Gästebucheintrag war erfolgreich!<br /><a href=\"".$this->generateUrl("_index")."/lastpage\">[zurück zum Gästebuch]</a>";
+    		$msg = $trans->trans("gbentry.success")."<br /><a href=\"".$this->generateUrl("_index")."/lastpage\">[".$trans->trans("page.back.gb")."]</a>";
     			
     		return $this->render(
     			'gaestebuch/create.html.twig',
@@ -99,11 +100,11 @@ class GBEntryController extends Controller
     	else {
     		return $this->render(
     			'gaestebuch/create.html.twig',
-    			array('form' => $form->createView(), 'error' => $mgr->getErrorMessage()));
+    			array('form' => $form->createView(), 'error' => $mgr->getErrorMessage(),'mformtitle' => $trans->trans("gbentry.create")));
     	}
     	return $this->render(
     			'gaestebuch/create.html.twig', 
-    			array('form' => $form->createView(), 'error' => $mgr->getErrorMessage()));
+    			array('form' => $form->createView(), 'error' => $mgr->getErrorMessage(),'mformtitle' => $trans->trans("gbentry.create")));
     }
 
     /**
@@ -133,6 +134,7 @@ class GBEntryController extends Controller
      */
     public function editAction($id)
     {
+    	$trans = $this->get("translator");
     	$req = $this->getRequest();
     	$session = $this->getUser();
     	 
@@ -149,7 +151,7 @@ class GBEntryController extends Controller
 	    		$result = $mgr->editGuestbookEntry($form, $entity);
 	    		switch($result){
 	    			case true:
-	    				$msg = "Update erfolgreich!<br /><a href=\"".$this->generateUrl("_index")."/lastpage\">[zurück zum Gästebuch]</a>";
+	    				$msg = $trans->trans("gbentry.upd.suc")."<br /><a href=\"".$this->generateUrl("_index")."/lastpage\">[".$trans->trans("page.back.gb")."]</a>";
 	    				return $this->render(
 	    						'gaestebuch/create.html.twig',
 	    						array('form' => $form->createView(), 'overlay' => $msg, 'overlay_display'=>'inherit'));
@@ -158,7 +160,7 @@ class GBEntryController extends Controller
 	    			case null:
 	    				return $this->render(
 	    						'gaestebuch/create.html.twig',
-	    						array('form' => $form->createView(), 'error' => $error,'mformtitle' => "Eintrag bearbeiten"));
+	    						array('form' => $form->createView(), 'error' => $error,'mformtitle' => $trans->trans("gbentry.edit")));
 	    		}
 	    	}
 	    	else{
