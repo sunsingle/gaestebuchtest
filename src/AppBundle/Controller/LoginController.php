@@ -8,6 +8,7 @@ use AppBundle\Form\GBUserType;
 use AppBundle\Entity\GBUserEntry;
 use Symfony\Component\BrowserKit\Request;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
+use Symfony\Component\Form\Extension\Core\Type\LocaleType;
 
 class LoginController extends Controller
 {
@@ -97,17 +98,27 @@ class LoginController extends Controller
 	public function registerAction()
 	{
 		$t = $this->get("translator");
+		$mgr = $this->get('login_manager');
+			
 		$request = $this->getRequest();
 		
 		$form = $this->createFormBuilder()
 			->add("nick", "text")
 			->add("password","repeated", array("type" => "password", "invalid_message" => $t->trans("form.pass.inval")))
+			->add("locale", "choice", array(
+					'choices' => array(
+							"de" => "Deutsch",
+							"en" => "Englisch"
+					),
+					'label' => "Sprache: ",
+					'expanded' => true,
+					'multiple' => false
+			))
 			->getForm()
 		;
 		
 		$form->handleRequest($request);
 		if ($form->isSubmitted() && $form->isValid()){
-			$mgr = $this->get('login_manager');
 			$mgr->add_encoder($this->get("security.encoder_factory"));
 			
 			$result = $mgr->registerUser($form);

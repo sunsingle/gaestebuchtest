@@ -50,6 +50,7 @@ class GBEntryController extends Controller
     {
     	$sumPages = 0;
 
+    	$t		= $this->get("translator");
     	$mgr = $this->get('guestbook_manager');
     	
     	$response = $mgr->getGuestbook($page,$sumPages);
@@ -67,7 +68,8 @@ class GBEntryController extends Controller
     	
     	$entries = array();
     	foreach ($response AS $gbentry){
-    		$preTxt = ($gbentry->getRef() != -1) ? "[b][url=".$this->generateUrl("_entry",array("gid"=>$gbentry->getId()))."][color=#700]*** vom Admin bearbeitet ***[/color][/url][/b][br]" : "";
+    		$preTxt = ($gbentry->getRef() != -1) ? "[b][url=".$this->generateUrl("_entry",array("gid"=>$gbentry->getId()))."][color=#700]*** ".$t->trans("gbentry.adedit")." ***[/color][/url][/b]
+    				" : "";
     		$gbentry->setEntry($preTxt.$gbentry->getEntry());
     		$entries[] = $gbentry;
     	}

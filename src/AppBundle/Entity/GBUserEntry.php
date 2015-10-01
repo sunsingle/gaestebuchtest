@@ -26,6 +26,7 @@ class GBUserEntry implements UserInterface, \Serializable
 	 * @ORM\Column(type="integer",length=3)
 	 * @ORM\Id
 	 * @ORM\GeneratedValue(strategy="AUTO")
+	 * @ORM\OneToMany(targetEntity="AppBundle\Entity\GBComments", targetEntity="userId")
 	 */
 	protected $uid;	
 	
@@ -35,7 +36,7 @@ class GBUserEntry implements UserInterface, \Serializable
 	/** @ORM\Column(type="string", length=32) */
 	protected $pass;
 	
-	/** @ORM\Column(type="string", length=5) */
+	/** @ORM\Column(type="string", length=5, options={"default"="de"}, nullable=true) */
 	protected $locale;
 	
 	protected $salt;

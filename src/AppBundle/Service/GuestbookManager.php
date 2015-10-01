@@ -50,7 +50,7 @@ class GuestbookManager
 	 * @param integer $id
 	 * @return object|null The entity instance or NULL if the entity can not be found
 	 */
-	public function getGuestbookEntry($id)
+	private function getGuestbookEntry($id)
 	{
 		$entity = $this->emanager->getRepository("AppBundle:GBEntry")->find($id);
 		if ($entity == null)
