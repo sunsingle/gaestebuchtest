@@ -13,6 +13,7 @@ class GBEntry
 	 * @ORM\Column(type="integer", length=10)
 	 * @ORM\Id
 	 * @ORM\GeneratedValue(strategy="AUTO")
+	 * @ORM\OneToMany(targetEntity="AppBundle\Entity\GBComments", targetEntity="entryId")
 	 */
 	protected $id;
 

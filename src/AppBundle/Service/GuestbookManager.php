@@ -38,7 +38,7 @@ class GuestbookManager
 		$ref = null;
 		if ($entry != null){
 			if ($entry->getRef() != -1){
-				$ref = $this->getGuestbookEntry($entry->getRef());
+				$ref = $this->getRefGuestbookEntry($entry);
 			}
 			return array("entry" => $entry, "ref" => $ref);
 		}
@@ -50,11 +50,21 @@ class GuestbookManager
 	 * @param integer $id
 	 * @return object|null The entity instance or NULL if the entity can not be found
 	 */
-	private function getGuestbookEntry($id)
+	public function getGuestbookEntry(GBEntry $entry)
 	{
-		$entity = $this->emanager->getRepository("AppBundle:GBEntry")->find($id);
+		if ($entry == null)
+			$this->errormessage = "Kein Gästebucheintrag  gefunden!";
+		return $entry;
+	}
+	/**
+	 * @param integer $id
+	 * @return object|null The entity instance or NULL if the entity can not be found
+	 */
+	private function getRefGuestbookEntry(GBEntry $entry)
+	{
+		$entity = $this->emanager->getRepository("AppBundle:GBEntry")->find($entry->getRef());
 		if ($entity == null)
-			$this->errormessage = "Kein Gästebucheintrag zur ID $id gefunden!";
+			$this->errormessage = "Kein Gästebucheintrag gefunden!";
 		return $entity;
 	}
 	
@@ -67,7 +77,7 @@ class GuestbookManager
 	{
 		if ($form->isValid()){
 			if ($entity->getRef() != -1){
-				$this->deleteGuestbookEntry($this->getGuestbookEntry($entity->getRef()));
+				$this->deleteGuestbookEntry($this->getRefGuestbookEntry($entity));
 			}
 			$refId = $this->addGuestbookEntryAsData($entity->getName(), $entity->getEmail(), $entity->getEntry(), -2);
 			

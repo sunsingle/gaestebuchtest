@@ -3,8 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <title>{% block title %}Welcome!{% endblock %}</title>
-		{% block stylesheets %}{% endblock %}
-		<!-- <link rel="stylesheet" href="{{ asset('bundles/gaestebuch/css/'~csscustom|default('def')~'_lay.css') }}" />-->
+		{% block stylesheets %}<link rel="stylesheet" href="{{ asset('bundles/gaestebuch/css/default.css') }}" />{% endblock %}
 		<link rel="stylesheet" href="{{ mycss() }}" />
         {% block script %}{% endblock %}
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />

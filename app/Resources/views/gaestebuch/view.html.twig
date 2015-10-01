@@ -1,7 +1,5 @@
 {% extends "::base.html.twig" %}
 
-{% block stylesheets %}<link rel="stylesheet" href="{{ asset('bundles/gaestebuch/css/default.css') }}" />{% endblock %}
-
 {% block title %}{% trans %}gbentry.title{% endtrans %}{% endblock %}
 
 {% block body %}
@@ -14,7 +12,7 @@
 			<div class="gbentry_topline"></div>
 			<div class="gbentry_content">{{ entry.entry|bbcode_filter('my_default_filter') }}</div>
 			{% if app.user %}
-			<div class="gbentry_delete"><a href="{{ path('_edit', {'id': entry.id}) }}">&#128393; {% trans %}gbentry.edit{% endtrans %}</a> ♦ <a href="{{ path('_delete', {'gid': entry.id}) }}" onclick="return confirm('{% trans %}gbentry.confirm{% endtrans %}')">&#x2718; {% trans %}gbentry.delete{% endtrans %}</a></div>
+			<div class="gbentry_delete"><a href="{{ path('_edit', {'gid': entry.id}) }}">&#128393; {% trans %}gbentry.edit{% endtrans %}</a> ♦ <a href="{{ path('_delete', {'gid': entry.id}) }}" onclick="return confirm('{% trans %}gbentry.confirm{% endtrans %}')">&#x2718; {% trans %}gbentry.delete{% endtrans %}</a></div>
 			{% endif %}
 		</div>
 	{% endfor %}

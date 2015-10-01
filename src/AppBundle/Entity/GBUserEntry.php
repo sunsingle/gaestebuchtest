@@ -36,8 +36,11 @@ class GBUserEntry implements UserInterface, \Serializable
 	/** @ORM\Column(type="string", length=32) */
 	protected $pass;
 	
-	/** @ORM\Column(type="string", length=5, options={"default"="de"}, nullable=true) */
+	/** @ORM\Column(type="string", length=5, options={"default"="de"}) */
 	protected $locale;
+	
+	/** @ORM\Column(type="string", length=3, options={"default"="def"}) */
+	protected $theme;
 	
 	protected $salt;
 
@@ -163,5 +166,29 @@ class GBUserEntry implements UserInterface, \Serializable
     public function getLocale()
     {
         return $this->locale;
+    }
+
+    /**
+     * Set theme
+     *
+     * @param string $theme
+     *
+     * @return GBUserEntry
+     */
+    public function setTheme($theme)
+    {
+        $this->theme = $theme;
+
+        return $this;
+    }
+
+    /**
+     * Get theme
+     *
+     * @return string
+     */
+    public function getTheme()
+    {
+        return $this->theme;
     }
 }

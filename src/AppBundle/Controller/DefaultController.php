@@ -16,6 +16,14 @@ class DefaultController extends Controller
         $session = $this->getRequest()->getSession();
         $session->set("lay", $name);
         
+        $usr = $this->getUser();
+        if ($usr != null){
+        	$usr->setTheme($name);
+	        $mgr = $this->get('login_manager');
+	        $mgr->setTheme($usr);
+        }
+        
+        
         $referer = $this->getRequest()->headers->get('referer');
         
         if ($referer != "")

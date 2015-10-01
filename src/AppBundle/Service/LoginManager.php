@@ -23,6 +23,12 @@ class LoginManager
 		$this->encoder = $enc;
 	}
 	
+	public function setTheme(GBUserEntry $user)
+	{
+		$this->emanager->persist($user);
+		$this->emanager->flush();
+	}
+	
 	/**
 	 * @param FormInterface $form
 	 * @return int|false ID of inserted data OR success

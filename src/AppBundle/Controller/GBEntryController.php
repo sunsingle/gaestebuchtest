@@ -132,9 +132,10 @@ class GBEntryController extends Controller
     	return $this->redirect($this->generateUrl("_login"));
     }
     /**
-     * @Route("/edit/{id}", name="_edit")
+     * @Route("/edit/{gid}", name="_edit")
+     * @ParamConverter("entry", class="AppBundle:GBEntry", options={"id"="gid"})
      */
-    public function editAction($id)
+    public function editAction(GBEntry $entry)
     {
     	$trans = $this->get("translator");
     	$req = $this->getRequest();
@@ -143,7 +144,7 @@ class GBEntryController extends Controller
     	if ($session!= null)
     	{
 	    	$mgr = $this->get('guestbook_manager');
-	    	$entity = $mgr->getGuestbookEntry($id);
+	    	$entity = $mgr->getGuestbookEntry($entry);
 	    	if ($entity){
 	    		$form = $this->createForm(
 	    				new GBEntryType(true),
